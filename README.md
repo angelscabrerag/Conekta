@@ -6,7 +6,7 @@ Conekta 2.1.3 WHMCS
 
 Actualizacion 21 Septiembre 2015 (Gracias a Erick Álvarez de Conekta)
 
-* Agregamos el parametro (details->name) - se envia el nombre de quien realiza el pago en los 3 metodos de pago. 
+* Agregamos el parametro (details->name) - se envia el nombre de quien realiza el pago en los 3 metodos de pago.
 
 Actualizacion 21 agosto 2015 (Gracias a Moises P. por notificarnos el bug)
 
@@ -59,11 +59,11 @@ Instrucciones:
 2.- Configurar la pasarela de pago en el portal de admin del WHMCS
 
 3.- Configurar WebHooks en el portal de Conekta.io
-    
+
       - http://www.misitio.com/whmcs/modules/gateways/callback/conektabanorte.php (Eliminado)
-      
+
       - http://www.misitio.com/whmcs/modules/gateways/callback/conektaspei.php
-      
+
       - http://www.misitio.com/whmcs/modules/gateways/callback/conektaoxxo.php
 
 3.- Subir a raiz del WHMCS los archvos conekta_oxxo.php y conekta_spei.php
@@ -71,6 +71,13 @@ Instrucciones:
 4.- Realiza un par de pruebas en entorno testing
 
 5.- Disfruta
+
+
+=======
+
+Actualizacion 22 de febrero de 2021
+
+* Se edita para su compatibilidad con WHMCS 8.1.1 y con la platilla Twenty One que usa bootstrap, por lo que las paginas de ficha de pago OXXO Pay y SPEI se adapataron para ser responsivas.
 
 
 =======
