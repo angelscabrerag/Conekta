@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Conekta OXXO</title>
+
+<style>
+.normal{
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:12px;}
+</style>
+
+</head>
+
+<?php
+	$barras 		= @$_POST['barras'];
+	$numero 		= @$_POST['numero'];
+    $expira 		= @$_POST['expira'];
+    $monto 			= @$_POST['monto'];
+    $concepto 		= @$_POST['concepto'];
+?>
+
+<body>
+<center>
+<table width="800" border="0" cellpadding="10" cellspacing="0" class="normal">
+<tr>
+    <td align="center"><strong>PAGO EN TIENDAS OXXO</strong></td>
+    </tr>
+     <tr>
+    <td align="center">Imprime y presenta este comprobante en cualquier tienda OXXO del país para realizar el pago por tu compra</td>
+    </tr>
+    <tr>
+    <td align="center">Tambien puedes indicar que realizaras un pago con el número de referencia: <?php echo $numero ?> y el monto de $<?php echo $monto ?> M.N.</td>
+    </tr>
+  <tr>
+    <td align="center"><img src="assets/img/payment/conekta/oxxo_pay.png" width="300" height="auto" alt="oxxo_pay" /></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="<?php echo $barras ?>" /></td>
+    </tr>
+  <tr>
+    <tr>
+    <td align="center"><img src="https://chart.googleapis.com/chart?cht=qr&choe=UTF-8&chs=100x100&chl=<?php echo $numero ?>" /></td>
+    </tr>
+  <tr>
+    <td align="center"><?php echo $numero ?></td>
+    </tr>
+  <tr>
+    <td align="center">Fecha de vencimiento: <?php echo date('d-m-Y',$expira) ?></td>
+    </tr>
+  <tr>
+    <td align="center">Monto a pagar: $<?php echo $monto ?> M.N.</td>
+    </tr>
+    <tr>
+    <tr>
+    <td align="center">Concepto: <?php echo $concepto ?></td>
+    </tr>
+    <tr>
+    <td align="center"><p>La tienda donde se efectué el pago cobrara de $12.00 a $15.00 (pesos) en concepto de recepción de cobranza.</p>
+      <p>
+        <input type="button" name="button" id="button" value="Imprimir" onclick="window.print()" />
+      </p></td>
+    </tr>
+</table>
+</center>
+</body>
+</html>
