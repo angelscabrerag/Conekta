@@ -2,34 +2,34 @@
 
 // Copyright (c) 2015, Carlos Cesar Peña Gomez <CarlosCesar110988@gmail.com>
 //
-// Permission to use, copy, modify, and/or distribute this software for any 
-// purpose with or without fee is hereby granted, provided that the above copyright 
+// Permission to use, copy, modify, and/or distribute this software for any
+// purpose with or without fee is hereby granted, provided that the above copyright
 // notice and this permission notice appear in all copies.
 
-// THE SOFTWARE IS PROVIDED 'AS IS' AND THE AUTHOR DISCLAIMS ALL 
-// WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED 
-// WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL 
-// THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL 
-// DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA 
-// OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR 
-// OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE 
+// THE SOFTWARE IS PROVIDED 'AS IS' AND THE AUTHOR DISCLAIMS ALL
+// WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL
+// THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+// DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA
+// OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+// OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
 // USE OR PERFORMANCE OF THIS SOFTWARE.
 
 function conektacard_config() {
     $configarray = array(
 		'FriendlyName' => array(
-			'Type' =>'System', 
-			'Value' =>'Conekta Visa/MasterCard'
+			'Type' =>'System',
+			'Value' =>'Conekta Visa/MasterCard/AMEX'
 		),
 		'private_key' => array(
-			'FriendlyName' => 'Llave Privada', 
-			'Type' => 'text', 
+			'FriendlyName' => 'Llave Privada',
+			'Type' => 'text',
 			'Size' => '50'
 		),
 		'instructions' => array(
-			'FriendlyName' => 'Instrucciones de pago', 
-			'Type' => 'textarea', 
-			'Rows' => '5', 
+			'FriendlyName' => 'Instrucciones de pago',
+			'Type' => 'textarea',
+			'Rows' => '5',
 			'Description' => ''
 		)
     );
@@ -64,38 +64,38 @@ function conektacard_capture($params) {
 	$cardnumber 	= $params['cardnum'];
 	$cardexpiry 	= $params['cardexp'];
 	$cardissuenum 	= $params['cccvv'];
-	
+
 	$results = array();
-	
+
 	# Preparamos todos los parametros para enviar a Conekta.io
 	$card_num 			= $cardnumber;
 	$card_cvv 			= $cardissuenum;
 	$card_exp_month 	= substr($cardexpiry, 0, 2);
 	$card_exp_year 		= substr($cardexpiry, 2, 4);
 	$card_name 			= $firstname.' '.$lastname;
-	
+
 	$data_amount 		= str_replace('.', '', $amount);
 	$data_currency 		= strtolower($currency);
-	$data_description 	= 'Pago Factura No. '.$invoiceid;
-	
-	# Incluimos la libreria de Conecta 1.0 
-	
+	$data_description 	= 'Pago de Factura No. '.$invoiceid.' en Hosting Fácil';
+
+	# Incluimos la libreria de Conecta 1.0
+
 	// Usaremos la libreria 1.0 para procesar tarjeta de Credito / Debito
 	// Parche para enviar cargos sin tokenizar !!!
-	// Todavia no resuelvo el problema para tokenizar los datos de la tarjeta ... alguien que me ayude??? 
+	// Todavia no resuelvo el problema para tokenizar los datos de la tarjeta ... alguien que me ayude???
 	// CarlosCesar110988@gmail.om
-	
+
 	require_once('conekta/lib_1.0/Conekta.php');
-	
+
 	# Creamos el Objeto de Cargo
 	Conekta::setApiKey($private_key);
-	
+
 	# Arraglo con informacion de tarjeta
 	$card = array(
-				'number' 		=> $card_num, 
-				'exp_month' 	=> intval($card_exp_month), 
-				'exp_year' 		=> intval('20'.$card_exp_year), 
-				'cvc'			=> intval($card_cvv), 
+				'number' 		=> $card_num,
+				'exp_month' 	=> intval($card_exp_month),
+				'exp_year' 		=> intval('20'.$card_exp_year),
+				'cvc'			=> intval($card_cvv),
 				'name'			=> $card_name,
 				'address' => array(
 								'street1' 	=> $address1,
@@ -106,20 +106,20 @@ function conektacard_capture($params) {
 							)
 				);
 	try {
-	
+
 	  # Arraglo con informacion del cargo
 	  # Actualizacion 1.3 * 15 Agosto - 2015 Gracias a C. Randall
 	  $conekta = array(
-	  					'card' 			=> $card, 
-	  					'description' 	=> $data_description, 
-	  					'amount' 		=> intval($data_amount), 
+	  					'card' 			=> $card,
+	  					'description' 	=> $data_description,
+	  					'amount' 		=> intval($data_amount),
 	  					'currency' 		=> $data_currency,
 	  					'details'=> array(
 									      'email'			=> $email,
 									      'phone'			=> $phone,
 									      'name'			=> $firstname.' '.$lastname,
 									      'line_items'		=> array(
-															        array( 
+															        array(
 															          'name'		=>	$data_description,
 															          'sku'			=>	$invoiceid,
 															          'unit_price'	=> 	intval($data_amount),
@@ -128,20 +128,20 @@ function conektacard_capture($params) {
 															          'type'		=>	'service-purchase'
 															        )
 									      )
-									      
+
 									 )
 					 );
-	
+
 	  $charge = Conekta_Charge::create($conekta);
-	  
+
 	  # Transaccion Correcta
 	  $data = json_decode($charge);
 	  $results['status'] = 'success';
 	  $results['transid'] = $data->payment_method->auth_code;
 	  $results['data'] = 'OK';
-	} 
-	
-	catch (Exception $e) 
+	}
+
+	catch (Exception $e)
 	{
 	  # Transaccion Declinada
 	  $results['status'] = 'declined';
